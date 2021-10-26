@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
-project(dune-book CXX)
+project(dune-book LANGUAGES CXX)
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
 
 if(NOT (dune-common_DIR OR dune-common_ROOT OR
       "${CMAKE_PREFIX_PATH}" MATCHES ".*dune-common.*"))

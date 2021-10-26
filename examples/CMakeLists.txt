@@ -8,9 +8,26 @@
 add_executable("hello-dune" hello-dune.cc)
 target_link_dune_default_libraries("hello-dune")
 
+add_executable("getting-started-poisson-fem" getting-started-poisson-fem.cc)
+target_compile_features("getting-started-poisson-fem"
+        PUBLIC
+            cxx_nullptr
+        PRIVATE
+            cxx_lambdas)
+# cxx_std_17
+target_link_dune_default_libraries("getting-started-poisson-fem")
+target_compile_options("getting-started-poisson-fem" PRIVATE -Werror)
+dune_symlink_to_source_files(FILES l-shape.msh)
 # set(ENABLE_BUILD_DYNAMIC ON)
 # https://gitlab.onelab.info/gmsh/gmsh/-/blob/master/demos/api/CMakeLists.txt#L84
 find_library(GMSH_LIB gmsh)
 add_executable("hello-gmsh" hello-gmsh.cc)
 target_link_libraries("hello-gmsh" ${GMSH_LIB})
+add_executable("l-shape-gmsh" l-shape-gmsh.cc)
+target_link_libraries("l-shape-gmsh" ${GMSH_LIB})
 
+
+#add_custom_command(TARGET "l-shape-gmsh" POST_BUILD
+#        COMMAND ${CMAKE_COMMAND} -E copy
+#        ${CMAKE_CURRENT_LIST_DIR}/config/config.json
+#        ${CMAKE_CURRENT_BINARY_DIR})

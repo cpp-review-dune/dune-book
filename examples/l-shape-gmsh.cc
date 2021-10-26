@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 
   gmsh::model::mesh::generate(2);
 
-  gmsh::write("t1.msh");
+  gmsh::write("l-shape.msh");
   gmsh::finalize();
   return 0;
 }
