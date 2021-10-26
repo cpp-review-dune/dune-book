@@ -1,0 +1,12 @@
+################################
+# Dune module information file #
+################################
+
+# Name of the module
+Module: dune-book
+Version: 0.1
+Maintainer: caznaranl@uni.pe
+# Required build dependencies
+Depends: dune-pdelab
+# Optional build dependencies
+#Suggests:
