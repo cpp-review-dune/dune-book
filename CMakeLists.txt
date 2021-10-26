@@ -20,7 +20,12 @@ dune_project()
 
 dune_enable_all_packages()
 
-add_subdirectory(src)
+# https://github.com/dune-project/dune-common/blob/master/python/CMakeLists.txt#L18
+if(POLICY CMP0087)
+  cmake_policy(SET CMP0087 NEW)
+endif()
+
+add_subdirectory(examples)
 add_subdirectory(dune)
 add_subdirectory(doc)
 add_subdirectory(cmake/modules)
