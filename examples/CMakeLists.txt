@@ -8,7 +8,12 @@
 add_executable("hello-dune" hello-dune.cc)
 target_link_dune_default_libraries("hello-dune")
 
-add_executable("getting-started-poisson-fem" getting-started-poisson-fem.cc)
+add_executable("recipe-integration" recipe-integration.cc)
+target_link_dune_default_libraries("recipe-integration")
+add_executable("recipe-iterate-over-grid" recipe-iterate-over-grid.cc)
+target_link_dune_default_libraries("recipe-iterate-over-grid")
+
+add_executable("getting-started-poisson-fem" getting-started-poisson-fem.cc assembleElementStiffnessMatrix.hh)
 target_compile_features("getting-started-poisson-fem"
         PUBLIC
             cxx_nullptr

@@ -2,18 +2,19 @@ Installation of DUNE Numerics [v2.8.0](https://dune-project.org/releases/2.8.0)
 =========================
 
 Is pretty straightforward on [GNU/Linux](https://www.gnu.org/gnu/linux-and-gnu.html) [(I use Arch btw)](https://wiki.archlinux.org/title/arch_is_the_best), [macOS](https://github.com/dune-copasi/homebrew-tap) or [FreeBSD](https://www.freebsd.org).
+The full list is [here](https://repology.org/project/dune-common/packages).
 
-For Arch Linux 
+For Arch Linux
 --------------
 
 First, install some [AUR helper](https://wiki.archlinux.org/title/AUR_helpers) like [`yay`](https://github.com/Jguer/yay#installation).
 Optionally you can add [`arch4edu`](https://wiki.archlinux.org/title/unofficial_user_repositories#arch4edu) repository.
 
 ```console
-$ yay -Syu dune-core gmsh --needed --noconfirm
+$ yay -Syu dune-core gmsh qtcreator --needed --noconfirm
 ```
 
-For Debian Unstable (sid)
+For Debian 12 or later
 ---------------
 
 ```console
