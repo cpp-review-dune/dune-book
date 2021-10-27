@@ -33,6 +33,15 @@ target_compile_features("getting-started-transport-fv"
 target_link_dune_default_libraries("getting-started-transport-fv")
 target_compile_options("getting-started-transport-fv" PRIVATE -Werror)
 
+add_executable("grid-adaptivity" grid-adaptivity.cc)
+target_compile_features("grid-adaptivity"
+        PUBLIC
+            cxx_nullptr
+        PRIVATE
+            cxx_lambdas)
+target_link_dune_default_libraries("grid-adaptivity")
+target_compile_options("grid-adaptivity" PRIVATE -Werror)
+
 # set(ENABLE_BUILD_DYNAMIC ON)
 # https://gitlab.onelab.info/gmsh/gmsh/-/blob/master/demos/api/CMakeLists.txt#L84
 find_library(GMSH_LIB gmsh)
