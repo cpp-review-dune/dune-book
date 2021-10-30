@@ -5,8 +5,9 @@
 #include "config.h"
 #endif
 #include <dune/grid/yaspgrid.hh>
+
 int main(int argc, char **argv) {
-  Dune::MPIHelper &helper = Dune::MPIHelper::instance(argc, argv);
+  Dune::MPIHelper::instance(argc, argv);
 
   constexpr int dim = 4;
   using Grid = Dune::YaspGrid<dim>;

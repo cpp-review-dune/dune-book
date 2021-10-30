@@ -4,40 +4,14 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-#include <dune/common/exceptions.hh>
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/grid/io/file/vtk/vtkwriter.hh>
 #include <dune/grid/uggrid.hh>
 #include <dune/grid/utility/structuredgridfactory.hh>
-#include <iostream>
 #include <map>
 
-template <int dim> class Sphere {
-  double radius_;
-  Dune::FieldVector<double, dim> center_;
-
-public:
-  Sphere(const Dune::FieldVector<double, dim> &c, const double &r)
-      : radius_(r), center_(c) {}
-
-  double distanceTo(const Dune::FieldVector<double, dim> &point) const {
-    return std::abs((center_ - point).two_norm() - radius_);
-  }
-
-  void displace(const Dune::FieldVector<double, dim> &increment) {
-    center_ += increment;
-  }
-};
-
-template <int dim>
-double interpolate(const std::vector<double> values,
-                   Dune::FieldVector<double, dim> p) {
-  assert(values.size() == dim + 1);
-  double result = values[0];
-  for (std::size_t i = 0; i < p.size(); i++)
-    result += p[i] * (values[i + 1] - values[0]);
-  return result;
-};
+#include "Sphere.hh"
+#include "interpolate.hh"
 
 // https://stackoverflow.com/a/5192091/9302545
 int main(int argc, char *argv[]) {

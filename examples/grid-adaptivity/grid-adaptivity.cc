@@ -4,29 +4,12 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-#include <dune/common/exceptions.hh>
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/grid/io/file/vtk/vtkwriter.hh>
 #include <dune/grid/uggrid.hh>
 #include <dune/grid/utility/structuredgridfactory.hh>
-#include <iostream>
 
-template <int dim> class Sphere {
-  double radius_;
-  Dune::FieldVector<double, dim> center_;
-
-public:
-  Sphere(const Dune::FieldVector<double, dim> &center, const double &radius)
-      : radius_(radius), center_(center) {}
-
-  double distanceTo(const Dune::FieldVector<double, dim> &point) const {
-    return std::abs((center_ - point).two_norm() - radius_);
-  }
-
-  void displace(const Dune::FieldVector<double, dim> &increment) {
-    center_ += increment;
-  }
-};
+#include "Sphere.hh"
 
 int main(int argc, char **argv) {
 
