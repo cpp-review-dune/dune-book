@@ -1,5 +1,6 @@
 [](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=libmesh)
 [](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=mumps)
+[](https://stackoverflow.com/a/29504889)
 
 ```cmake
 # set(ENV{OMPI_MCA_opal_cuda_support} "0")

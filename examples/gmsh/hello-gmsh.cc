@@ -5,7 +5,8 @@
 
 #include <gmsh.h>
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   gmsh::initialize();
 
   gmsh::model::add("t1");

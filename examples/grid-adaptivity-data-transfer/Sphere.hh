@@ -13,13 +13,17 @@ template <int dim> class Sphere {
 
 public:
   Sphere(const Dune::FieldVector<double, dim> &c, const double &r)
-      : radius_(r), center_(c) {}
+      : radius_(r), center_(c)
+  {
+  }
 
-  double distanceTo(const Dune::FieldVector<double, dim> &point) const {
+  double distanceTo(const Dune::FieldVector<double, dim> &point) const
+  {
     return std::abs((center_ - point).two_norm() - radius_);
   }
 
-  void displace(const Dune::FieldVector<double, dim> &increment) {
+  void displace(const Dune::FieldVector<double, dim> &increment)
+  {
     center_ += increment;
   }
 };

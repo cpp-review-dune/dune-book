@@ -6,7 +6,8 @@
 #endif
 #include <dune/grid/yaspgrid.hh>
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   Dune::MPIHelper::instance(argc, argv);
 
   constexpr int dim = 4;

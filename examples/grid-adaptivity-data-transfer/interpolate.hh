@@ -9,7 +9,8 @@
 
 template <int dim>
 double interpolate(const std::vector<double> values,
-                   Dune::FieldVector<double, dim> p) {
+                   Dune::FieldVector<double, dim> p)
+{
   assert(values.size() == dim + 1);
   double result = values[0];
   for (std::size_t i = 0; i < p.size(); i++)

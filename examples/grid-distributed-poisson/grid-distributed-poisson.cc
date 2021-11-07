@@ -19,7 +19,8 @@
 
 template <class LocalView, class Matrix>
 void assembleElementStiffnessMatrix(const LocalView &localView,
-                                    Matrix &elementMatrix) {
+                                    Matrix &elementMatrix)
+{
   using Element = typename LocalView::Element;
   constexpr int dim = Element::dimension;
   auto element = localView.element();
@@ -67,7 +68,8 @@ void assembleElementVolumeTerm(
     const LocalView &localView, Dune::BlockVector<double> &localB,
     const std::function<
         double(Dune::FieldVector<double, LocalView::Element::dimension>)>
-        volumeTerm) {
+        volumeTerm)
+{
   using Element = typename LocalView::Element;
   auto element = localView.element();
   constexpr int dim = Element::dimension;
@@ -102,7 +104,8 @@ void assembleElementVolumeTerm(
 }
 
 template <class Basis>
-void getOccupationPattern(const Basis &basis, Dune::MatrixIndexSet &nb) {
+void getOccupationPattern(const Basis &basis, Dune::MatrixIndexSet &nb)
+{
   nb.resize(basis.size(), basis.size());
 
   auto gridView = basis.gridView();
@@ -129,7 +132,8 @@ void assemblePoissonProblem(
     Dune::BlockVector<double> &b,
     const std::function<
         double(Dune::FieldVector<double, Basis::GridView::dimension>)>
-        volumeTerm) {
+        volumeTerm)
+{
   auto gridView = basis.gridView();
 
   Dune::MatrixIndexSet occupationPattern;
@@ -176,21 +180,26 @@ struct LBVertexDataHandle : public Dune::CommDataHandleIF<
                                 typename AssociativeContainer::mapped_type> {
   LBVertexDataHandle(const std::shared_ptr<Grid> &grid,
                      AssociativeContainer &dataContainer)
-      : idSet_(grid->localIdSet()), dataContainer_(dataContainer) {}
+      : idSet_(grid->localIdSet()), dataContainer_(dataContainer)
+  {
+  }
 
-  bool contains(int dim, int codim) const {
+  bool contains(int dim, int codim) const
+  {
     assert(dim == Grid::dimension);
     return (codim == dim);
   }
 
   bool fixedSize(int dim, int codim) const { return true; }
 
-  template <class Entity> std::size_t size(const Entity &entity) const {
+  template <class Entity> std::size_t size(const Entity &entity) const
+  {
     return 1;
   }
 
   template <class MessageBuffer, class Entity>
-  void gather(MessageBuffer &buffer, const Entity &entity, std::size_t n) {
+  void gather(MessageBuffer &buffer, const Entity &entity, std::size_t n)
+  {
     assert(n == 1);
 
     auto id = idSet_.id(entity);
@@ -198,7 +207,8 @@ struct LBVertexDataHandle : public Dune::CommDataHandleIF<
   }
 
   template <class MessageBuffer, class Entity>
-  void scatter(MessageBuffer &buffer, const Entity &entity, std::size_t n) {
+  void scatter(MessageBuffer &buffer, const Entity &entity, std::size_t n)
+  {
     assert(n == 1);
 
     auto id = idSet_.id(entity);
@@ -219,7 +229,9 @@ struct VertexDataUpdate
   VertexDataUpdate(const GridView &gridView, const Vector &userDataSend,
                    Vector &userDataReceive)
       : gridView_(gridView), userDataSend_(userDataSend),
-        userDataReceive_(userDataReceive) {}
+        userDataReceive_(userDataReceive)
+  {
+  }
 
   bool contains(int dim, int codim) const { return (codim == dim); }
 
@@ -228,13 +240,15 @@ struct VertexDataUpdate
   template <class Entity> std::size_t size(const Entity &e) const { return 1; }
 
   template <class MessageBuffer, class Entity>
-  void gather(MessageBuffer &buffer, const Entity &entity) const {
+  void gather(MessageBuffer &buffer, const Entity &entity) const
+  {
     auto index = gridView_.indexSet().index(entity);
     buffer.write(userDataSend_[index]);
   }
 
   template <class MessageBuffer, class Entity>
-  void scatter(MessageBuffer &buffer, const Entity &entity, std::size_t n) {
+  void scatter(MessageBuffer &buffer, const Entity &entity, std::size_t n)
+  {
     assert(n == 1);
     DataType x;
     buffer.read(x);
@@ -249,7 +263,8 @@ private:
 };
 
 // https://stackoverflow.com/a/5192091/9302545
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
   const Dune::MPIHelper &mpiHelper = Dune::MPIHelper::instance(argc, argv);
 

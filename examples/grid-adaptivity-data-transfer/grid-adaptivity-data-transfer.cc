@@ -14,7 +14,8 @@
 #include "interpolate.hh"
 
 // https://stackoverflow.com/a/5192091/9302545
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
   Dune::MPIHelper::instance(argc, argv);
 
@@ -105,7 +106,8 @@ int main(int argc, char *argv[]) {
             data[indexSet.subIndex(element, k, dim)] =
                 interpolate(values, positionInFather);
           }
-        } else
+        }
+        else
           for (std::size_t k = 0; k < element.subEntities(dim); k++)
             data[indexSet.subIndex(element, k, dim)] =
                 persistentContainer[idSet.subId(element, k, dim)];

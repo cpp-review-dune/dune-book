@@ -9,7 +9,11 @@
 #include <dune/grid/io/file/vtk.hh>
 #include <dune/grid/yaspgrid.hh>
 
-int main(int argc, char **argv) {
+// { using_namespace_dune_begin }
+// { using_namespace_dune_end }
+
+int main(int argc, char **argv)
+{
 
   Dune::MPIHelper::instance(argc, argv);
 
