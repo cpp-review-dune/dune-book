@@ -2,8 +2,7 @@
 // Created by carlosal1015 on 10/29/21.
 //
 
-#ifndef DUNE_BOOK_SPHERE_HH
-#define DUNE_BOOK_SPHERE_HH
+#pragma once
 
 #include <dune/common/fvector.hh>
 
@@ -27,5 +26,3 @@ public:
     center_ += increment;
   }
 };
-
-#endif // DUNE_BOOK_SPHERE_HH

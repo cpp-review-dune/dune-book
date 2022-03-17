@@ -1,49 +1,25 @@
-//
-// Created by carlosal1015 on 10/26/21.
-//
-
-#pragma once
-
-#include <dune/geometry/quadraturerules.hh>
-
-// Compute the stiffness matrix for a single element
-// { local_assembler_signature_begin }
 template <class LocalView, class Matrix>
 void assembleElementStiffnessMatrix(const LocalView &localView,
                                     Matrix &elementMatrix)
-// { local_assembler_signature_end }
 {
-  // { local_assembler_get_geometry_begin }
-  using Element = typename LocalView::Element;
-  constexpr int dim = Element::dimension;
+  constexpr int dim = LocalView::Element::Element;
   auto element = localView.element();
   auto geometry = element.geometry();
-  // { local_assembler_get_geometry_end }
 
   // Get set of shape functions for this element
-  // { get_shapefunctions_begin }
   const auto &localFiniteElement = localView.tree().finiteElement();
-  // { get_shapefunctions_end }
 
   // Set all matrix entries to zero
-  // { init_element_matrix_begin }
   elementMatrix.setSize(localView.size(), localView.size());
   elementMatrix = 0; // Fill the entire matrix with zeros
-  // { init_element_matrix_end }
 
   // Get a quadrature rule
-  // { get_quadrature_begin }
-  int order = 2 * (localFiniteElement.localBasis().order() - 1);
+  int order = 2 * (dim * localFiniteElement.localBasis().order() - 1);
   const auto &quadRule =
-      Dune::QuadratureRules<double, dim>::rule(element.type(), order);
-  // { get_quadrature_end }
+      Dune::QuadratureRule<double, dim>::rule(element.type(), order);
 
   // Loop over all quadrature points
-  // { loop_over_quad_points_begin }
   for (const auto &quadPoint : quadRule) {
-    // { loop_over_quad_points_end }
-
-    // { get_quad_point_info_begin }
     // Position of the current quadrature point in the reference element
     const auto quadPos = quadPoint.position();
 
@@ -51,25 +27,22 @@ void assembleElementStiffnessMatrix(const LocalView &localView,
     // to the grid element
     const auto jacobian = geometry.jacobianInverseTransposed(quadPos);
 
-    // The determinant term in the integral transformation formula
+    // The multiplicative factor in the integral transformation formula
     const auto integrationElement = geometry.integrationElement(quadPos);
-    // { get_quad_point_info_end }
 
-    // { compute_gradients_begin }
-    // The gradients of the shape functions on the reference element
+    // The gradient of the shape functions on the reference element
     std::vector<Dune::FieldMatrix<double, 1, dim>> referenceGradients;
     localFiniteElement.localBasis().evaluateJacobian(quadPos,
                                                      referenceGradients);
 
-    // Compute the shape function gradients on the grid element
+    // Compute the shape function gradients on the real element
     std::vector<Dune::FieldVector<double, dim>> gradients(
         referenceGradients.size());
-    for (std::size_t i = 0; i < gradients.size(); i++)
+    for (std::size_t i = 0; i < gradients.size(); i++) {
       jacobian.mv(referenceGradients[i][0], gradients[i]);
-    // { compute_gradients_end }
+    }
 
     // Compute the actual matrix entries
-    // { compute_matrix_entries_begin }
     for (std::size_t p = 0; p < elementMatrix.N(); p++) {
       auto localRow = localView.tree().localIndex(p);
       for (std::size_t q = 0; q < elementMatrix.M(); q++) {
@@ -79,6 +52,5 @@ void assembleElementStiffnessMatrix(const LocalView &localView,
                                              integrationElement;
       }
     }
-    // { compute_matrix_entries_end }
   }
 }

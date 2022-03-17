@@ -11,14 +11,17 @@
 
 #include "Sphere.hh"
 
+// { grid_setup_begin }
 int main(int argc, char **argv)
 {
 
+  // Set up MPI if available
   Dune::MPIHelper::instance(argc, argv);
 
-  constexpr int dim = 2;
+  constexpr int dim = 2; // Grid and world dimension
   using Grid = Dune::UGGrid<dim>;
 
+  // Start with a structured grid
   const std::array<unsigned, dim> n = {8, 25};
 
   const Dune::FieldVector<double, dim> lower = {0, 0};
@@ -29,40 +32,61 @@ int main(int argc, char **argv)
 
   using GridView = Grid::LeafGridView;
   const GridView gridView = grid->leafGridView();
+  // { grid_setup_end }
 
+  // Create sphere
+  // { sphere_setup_begin }
   Sphere<dim> sphere({3.0, 2.5}, 1.0);
 
-  const int steps = 30;
-  const Dune::FieldVector<double, dim> stepDisplacement = {0, 0.5};
+  // Set parameters
+  const int steps = 30; // Total number of steps
+  const Dune::FieldVector<double, dim> stepDisplacement = {
+      0, 0.5}; // Sphere displacement per step
 
-  const double epsilon = 0.4;
+  const double epsilon = 0.4; // Thickness of the refined region
+                              // aroun the sphere
+  const int levels = 3;       // Number of refinement levels
+  // { sphere_setup_end }
 
-  const int levels = 3;
-
+  // { coarsening_refinement_begin }
   for (int i = 0; i < steps; ++i) {
     std::cout << "Step " << i << std::endl;
 
+    // Coarsen everything
     for (int k = 0; k < levels - 1; ++k) {
-      for (const auto &element : elements(gridView))
+      for (const auto &element : elements(gridView)) {
         grid->mark(-1, element);
+      }
+
       grid->preAdapt();
       grid->adapt();
       grid->postAdapt();
     }
 
+    // Refine near the sphere
     for (int k = 0; k < levels - 1; ++k) {
-      for (const auto &element : elements(gridView))
-        if (sphere.distanceTo(element.geometry().center()) < epsilon)
+      // Select elements that are close to the sphere for grid refinement
+      for (const auto &element : elements(gridView)) {
+        if (sphere.distanceTo(element.geometry().center()) < epsilon) {
           grid->mark(1, element);
+        }
+      }
+
       grid->preAdapt();
       grid->adapt();
       grid->postAdapt();
     }
+    // { coarsening_refinement_end }
+
+    // Write grid to file
+    // { writing_moving_begin }
     Dune::VTKWriter<GridView> vtkWriter(gridView);
     vtkWriter.write("refined_grid_" + std::to_string(i));
 
+    // Move sphere
     sphere.displace(stepDisplacement);
   }
+  // { writing_moving_end }
 
   return 0;
 }

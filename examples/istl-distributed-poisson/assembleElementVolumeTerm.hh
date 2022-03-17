@@ -1,12 +1,3 @@
-//
-// Created by carlosal1015 on 10/29/21.
-//
-
-#pragma once
-
-#include <dune/geometry/quadraturerules.hh>
-#include <dune/istl/bvector.hh>
-
 // Compute the source term for a single element
 template <class LocalView>
 void assembleElementVolumeTerm(
@@ -15,11 +6,10 @@ void assembleElementVolumeTerm(
         double(Dune::FieldVector<double, LocalView::Element::dimension>)>
         volumeTerm)
 {
-  using Element = typename LocalView::Element;
   auto element = localView.element();
-  constexpr int dim = Element::dimension;
+  constexpr int dim = LocalView::Element::dimension;
 
-  // Set a shape functions for a single element
+  // Set of shape functions for a single element
   const auto &localFiniteElement = localView.tree().finiteElement();
 
   // Set all entries to zero
@@ -36,7 +26,7 @@ void assembleElementVolumeTerm(
     // Position of the current quadrature point in the reference element
     const Dune::FieldVector<double, dim> &quadPos = quadPoint.position();
 
-    // The multiplicative factor in the integral transformation formula
+    // The multiplicative  factor in the integral transformation formula
     const double integrationElement =
         element.geometry().integrationElement(quadPos);
 

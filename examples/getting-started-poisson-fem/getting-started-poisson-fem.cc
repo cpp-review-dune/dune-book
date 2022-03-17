@@ -4,6 +4,17 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+/**
+ * @file getting-started-poisson-fem.cc
+ * @brief
+ * Equation: Poisson equation
+ * Discretization: First-order Lagrange finite elements
+ * Grid: Unstructured triangle grid, implemented with UGGrid
+ * Solver: CG Solver with ILU preconditioner
+ * Distributed: no
+ */
+
 // Included by uggrid.hh
 // #include <dune/common/parallel/mpihelper.hh>
 
@@ -78,7 +89,8 @@ int main(int argc, char **argv)
   // { call_assembler_end }
 
   // Determine Dirichlet dofs by marking all degrees of freedom whose Lagrange
-  // nodes comply with a given predicate { dirichlet_marking_begin }
+  // nodes comply with a given predicate
+  // { dirichlet_marking_begin }
   auto predicate = [](auto x) {
     return x[0] < 1e-8 || x[1] < 1e-8 || (x[0] > 0.4999 && x[1] > 0.4999);
   };

@@ -2,17 +2,16 @@
 // Created by carlosal1015 on 10/29/21.
 //
 
-#ifndef DUNE_BOOK_EVOLVE_HH
-#define DUNE_BOOK_EVOLVE_HH
+#pragma once
 
 #include <dune/common/fvector.hh>
 #include <dune/geometry/referenceelements.hh>
-#include <vector>
 
 // { evolve_signature_begin }
 template <class GridView, class Mapper>
 void evolve(
-    const GridView &gridView, const Mapper &mapper, double dt,
+    const GridView &gridView, const Mapper &mapper,
+    double dt, // Time step size
     std::vector<double> &c,
     const std::function<Dune::FieldVector<double, GridView::dimension>(
         Dune::FieldVector<double, GridView::dimension>)>
@@ -103,5 +102,3 @@ void evolve(
     c[i] += dt * update[i];
 }
 // { evolve_end }
-
-#endif // DUNE_BOOK_EVOLVE_HH

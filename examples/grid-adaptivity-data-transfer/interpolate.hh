@@ -2,11 +2,12 @@
 // Created by carlosal1015 on 10/29/21.
 //
 
-#ifndef DUNE_BOOK_INTERPOLATE_HH
-#define DUNE_BOOK_INTERPOLATE_HH
+#pragma once
 
 #include <dune/common/fvector.hh>
 
+// Linear interpolation on a simplex
+// { linear_interpolation_begin }
 template <int dim>
 double interpolate(const std::vector<double> values,
                    Dune::FieldVector<double, dim> p)
@@ -17,5 +18,4 @@ double interpolate(const std::vector<double> values,
     result += p[i] * (values[i + 1] - values[0]);
   return result;
 }
-
-#endif // DUNE_BOOK_INTERPOLATE_HH
+// { linear_interpolation_end }

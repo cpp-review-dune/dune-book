@@ -2,11 +2,11 @@
 // Created by carlosal1015 on 10/29/21.
 //
 
-#ifndef DUNE_BOOK_SPHERE_HH
-#define DUNE_BOOK_SPHERE_HH
+#pragma once
 
 #include <dune/common/fvector.hh>
 
+// { sphere_begin }
 template <int dim> class Sphere {
   double radius_;
   Dune::FieldVector<double, dim> center_;
@@ -27,5 +27,4 @@ public:
     center_ += increment;
   }
 };
-
-#endif // DUNE_BOOK_SPHERE_HH
+// { sphere_end }

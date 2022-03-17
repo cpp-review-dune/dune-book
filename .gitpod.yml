@@ -1,5 +1,12 @@
 image: ghcr.io/cpp-review-dune/introductory-review/dunebook
 
+tasks:
+  - name: CMake tasks
+    command: |
+      cmake -LAH >options.txt 2>&1
+      cmake -S . -B build
+      cmake --build build
+
 github:
   prebuilds:
     # enable for the master/default branch (defaults to true)

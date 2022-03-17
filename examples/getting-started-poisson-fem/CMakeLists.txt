@@ -1,9 +1,6 @@
 add_executable("getting-started-poisson-fem"
-        getting-started-poisson-fem.cc
-        assembleElementStiffnessMatrix.hh
-        assembleElementVolumeTerm.hh
-        getOccupationPattern.hh
-        assemblePoissonProblem.hh)
+        getting-started-poisson-fem.cc)
+# assembleElementStiffnessMatrix.hh assembleElementVolumeTerm.hh getOccupationPattern.hh assemblePoissonProblem.hh
 target_compile_features("getting-started-poisson-fem"
         PUBLIC
         cxx_nullptr

@@ -1,7 +1,3 @@
-//
-// Created by carlosal1015 on 10/29/21.
-//
-
 #pragma once
 
 #include <dune/geometry/quadraturerules.hh>
