@@ -16,10 +16,15 @@
 #include <dune/istl/matrixindexset.hh>
 #include <dune/istl/operators.hh>
 #include <dune/istl/preconditioner.hh>
-#include <dune/istl/solver.hh>
+#include <dune/istl/solvers.hh>
 
 #include <dune/functions/functionspacebases/interpolate.hh>
 #include <dune/functions/functionspacebases/lagrangebasis.hh>
+
+#include "AdditiveScalarProduct.hh"
+#include "JacobiPreconditioner.hh"
+#include "LBVertexDataHandle.hh"
+#include "assemblePoissonProblem.hh"
 
 // { main_begin }
 int main(int argc, char *argv[])
@@ -65,4 +70,89 @@ int main(int argc, char *argv[])
       dataHandle(grid, persistentContainer);
 
   grid->loadBalance(dataHandle);
+
+  // Get gridView again after load-balancing, to make sure it is up-to-date
+  gridView = grid->leafGridView();
+
+  // Copy data back into the array
+  dataVector.resize(gridView.size(dim));
+
+  for (const auto &vertex : vertices(gridView)) {
+    dataVector[gridView.indexSet().index(vertex)] =
+        persistentContainer[idSet.id(vertex)];
+  }
+
+  /////////////////////////////////////////////////////////
+  // Stiffness matrix and right hand side vector
+  /////////////////////////////////////////////////////////
+
+  using Vector = Dune::BlockVector<double>;
+  using Matrix = Dune::BCRSMatrix<double>;
+
+  Vector rhs;
+  Matrix stiffnessMatrix;
+
+  // Assemble the Poisson system in first-order Lagrange space
+  Dune::Functions::LagrangeBasis<GridView, 1> basis(gridView);
+
+  auto sourceTerm = [](const Dune::FieldVector<double, dim> &x) {
+    return -5.0;
+  };
+
+  assemblePoissonProblem(basis, stiffnessMatrix, rhs, sourceTerm);
+
+  // Determine Dirichlet degrees of freedom by marking all those
+  // whose Lagrange nodes comply with a given predicate.
+  auto dirichletPredicate = [](auto p) {
+    return p[0] < 1e-8 || p[1] < 1e-8 || (p[0] > 0.4999 && p[1] > 0.4999);
+  };
+
+  // Interpolating the predicate will mark all Dirichlet degrees of freedom
+  std::vector<bool> dirichletNodes;
+  Dune::Functions::interpolate(basis, dirichletNodes, dirichletPredicate);
+
+  /////////////////////////////////////////////////////////
+  // Modify Dirichlet matrix rows
+  /////////////////////////////////////////////////////////
+
+  // Loop over the matrix rows
+  for (std::size_t i = 0; i < stiffnessMatrix.N(); i++) {
+    if (dirichletNodes[i]) {
+      auto cIt = stiffnessMatrix[i].begin();
+      auto cEndIt = stiffnessMatrix[i].end();
+      // Loop over nonzero matrix entries in current row
+      for (; cIt != cEndIt; ++cIt)
+        *cIt = (i == cIt.index()) ? 1.0 : 0.0;
+    }
+  }
+
+  // Set Dirichlet values
+  for (std::size_t i = 0; i < dirichletNodes.size(); i++)
+    if (dirichletNodes[i])
+      rhs[i] = dataVector[i];
+
+  Vector x(basis.size());
+  std::copy(dataVector.begin(), dataVector.end(), x.begin());
+
+  double reduction = 1e-3;
+  int maxIterations = 50;
+
+  Dune::MatrixAdapter<Matrix, Vector, Vector> linearOperator(stiffnessMatrix);
+  JacobiPreconditioner<GridView, Matrix, Vector> preconditioner(
+      gridView, stiffnessMatrix);
+  AdditiveScalarProduct<GridView, Vector> scalarProduct(gridView);
+
+  Dune::CGSolver<Vector> cg(linearOperator, scalarProduct, preconditioner,
+                            reduction, maxIterations,
+                            (mpiHelper.rank() == 0) ? 2 : 0);
+
+  // Object storing some statistics about the solving process
+  Dune::InverseOperatorResult statistics;
+
+  // Solve!
+  cg.apply(x, rhs, statistics);
+
+  Dune::VTKWriter<GridView> vtkWriter(gridView);
+  vtkWriter.addVertexData(x, "solution");
+  vtkWriter.write("istl-distributed-poisson-result");
 }

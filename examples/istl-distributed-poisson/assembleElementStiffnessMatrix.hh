@@ -1,8 +1,18 @@
+//
+// Created by carlosal1015 on 03/17/22.
+//
+
+#pragma once
+
+#include <dune/geometry/quadraturerules.hh>
+
+// Compute the stiffness matrix for a single element
 template <class LocalView, class Matrix>
 void assembleElementStiffnessMatrix(const LocalView &localView,
                                     Matrix &elementMatrix)
 {
-  constexpr int dim = LocalView::Element::Element;
+  using Element = typename LocalView::Element;
+  constexpr int dim = Element::dimension;
   auto element = localView.element();
   auto geometry = element.geometry();
 
@@ -16,7 +26,7 @@ void assembleElementStiffnessMatrix(const LocalView &localView,
   // Get a quadrature rule
   int order = 2 * (dim * localFiniteElement.localBasis().order() - 1);
   const auto &quadRule =
-      Dune::QuadratureRule<double, dim>::rule(element.type(), order);
+      Dune::QuadratureRules<double, dim>::rule(element.type(), order);
 
   // Loop over all quadrature points
   for (const auto &quadPoint : quadRule) {

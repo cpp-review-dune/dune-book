@@ -1,3 +1,11 @@
+//
+// Created by carlosal1015 on 03/17/22.
+//
+
+#pragma once
+
+#include <dune/istl/matrixindexset.hh>
+
 // Get the occupation pattern of the stiffness matrix
 template <class Basis>
 void getOccupationPattern(const Basis &basis, Dune::MatrixIndexSet &nb)

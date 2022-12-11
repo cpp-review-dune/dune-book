@@ -1,7 +1,16 @@
+#pragma once
+
+#include "assembleElementStiffnessMatrix.hh"
+#include "assembleElementVolumeTerm.hh"
+#include "getOccupationPattern.hh"
+
+#include <dune/istl/bcrsmatrix.hh>
+// #include <dune/istl/matrix.hh>
+
 // Assemble the Laplace stiffness matrix on the given grid view
 template <class Basis>
 void assemblePoissonProblem(
-    const Basis &basis, BCRSMatrix<double> &matrix,
+    const Basis &basis, Dune::BCRSMatrix<double> &matrix,
     Dune::BlockVector<double> &b,
     const std::function<
         double(Dune::FieldVector<double, Basis::GridView::dimension>)>

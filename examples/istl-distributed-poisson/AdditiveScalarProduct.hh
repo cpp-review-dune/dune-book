@@ -1,7 +1,14 @@
+#pragma once
+
+#include "VertexDataUpdate.hh"
+
 // Scalar product for pairs of additive and consistent vectors
 template <class GridView, class Vector>
 // { scalar_product_begin }
-class AdditiveScalarProduct : public ScalarProduct<Vector> {
+class AdditiveScalarProduct : public Dune::ScalarProduct<Vector> {
+  using typename Dune::ScalarProduct<Vector>::field_type;
+  using typename Dune::ScalarProduct<Vector>::real_type;
+
 public:
   // Constructor
   AdditiveScalarProduct(const GridView &gridView) : gridView_(gridView) {}
@@ -23,8 +30,8 @@ public:
                                                           xConsistent);
 
     gridView_.communicate(vertexUpdateHandle,
-                          InteriorBorder_InteriorBorder_Interface,
-                          ForwardCommunication);
+                          Dune::InteriorBorder_InteriorBorder_Interface,
+                          Dune::ForwardCommunication);
 
     // Local scalar product of x with itself
     auto localNorm2 = x.dot(xConsistent);
@@ -35,9 +42,9 @@ public:
 
   // Scalar product, linear operator, and preconditioner must be
   // of the same category
-  virtual SolverCategory::Category category() const override
+  virtual Dune::SolverCategory::Category category() const override
   {
-    return SolverCategory::sequential;
+    return Dune::SolverCategory::sequential;
   }
 
 private:

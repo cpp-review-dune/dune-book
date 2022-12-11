@@ -1,3 +1,7 @@
+#pragma once
+
+#include "VertexDataUpdate.hh"
+
 // { preconditioner_begin }
 template <class GridView, class Matrix, class Vector>
 class JacobiPreconditioner : public Dune::Preconditioner<Vector, Vector> {
@@ -14,8 +18,8 @@ public:
     VertexDataUpdate<GridView, Vector> matrixDataHandle(gridView, diagonal,
                                                         consistentDiagonal_);
 
-    gridView_.communicate(matrixDataHandle, All_All_Interface,
-                          ForwardCommunication);
+    gridView_.communicate(matrixDataHandle, Dune::All_All_Interface,
+                          Dune::ForwardCommunication);
   }
 
   // Prepare the preconditioner
@@ -30,10 +34,10 @@ public:
                                                           rConsistent);
 
     gridView_.communicate(vertexUpdateHandle,
-                          InteriorBorder_InteriorBorder_Interface,
-                          ForwardCommunication);
+                          Dune::InteriorBorder_InteriorBorder_Interface,
+                          Dune::ForwardCommunication);
 
-    for (std::size_t i = 0; i < matrix.N(); i++) {
+    for (std::size_t i = 0; i < matrix_.N(); i++) {
       v[i] = rConsistent[i] / consistentDiagonal_[i];
     }
   }
@@ -41,9 +45,9 @@ public:
   virtual void post(Vector &x) override {}
 
   // Category of the preconditioner
-  virtual SolverCategory::Category category() const override
+  virtual Dune::SolverCategory::Category category() const override
   {
-    return SolverCategory::sequential;
+    return Dune::SolverCategory::sequential;
   }
 
 private:

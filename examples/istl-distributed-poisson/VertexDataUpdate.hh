@@ -1,9 +1,15 @@
+#pragma once
+
+#include <dune/grid/common/datahandleif.hh>
+
 // A DataHandle class to communicate and add vertex data
 // { comm_data_handle_begin }
 template <class GridView, class Vector>
 struct VertexDataUpdate
     : public Dune::CommDataHandleIF<VertexDataUpdate<GridView, Vector>,
                                     typename Vector::value_type> {
+  using DataType = typename Vector::value_type;
+
   // Constructor
   VertexDataUpdate(const GridView &gridView, const Vector &userDataSend,
                    Vector &userDataReceive)
@@ -25,7 +31,7 @@ struct VertexDataUpdate
   }
 
   // How many objects of type DataType have to be sent for a given entity
-  template <class Entiy> std::size_t size(const Entity &e) const
+  template <class Entity> std::size_t size(const Entity &e) const
   {
     return 1; // One data item per vertex
   }

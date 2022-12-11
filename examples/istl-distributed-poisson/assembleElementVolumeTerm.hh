@@ -1,3 +1,8 @@
+#pragma once
+
+#include <dune/geometry/quadraturerules.hh>
+#include <dune/istl/bvector.hh>
+
 // Compute the source term for a single element
 template <class LocalView>
 void assembleElementVolumeTerm(

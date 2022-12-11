@@ -1,3 +1,7 @@
+#pragma once
+
+#include <dune/grid/common/datahandleif.hh>
+
 // { lb_data_handle_begin }
 template <class Grid, class AssociativeContainer>
 struct LBVertexDataHandle : public Dune::CommDataHandleIF<
