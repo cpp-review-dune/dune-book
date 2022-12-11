@@ -3,8 +3,8 @@ image: ghcr.io/cpp-review-dune/introductory-review/dunebook
 tasks:
   - name: CMake tasks
     command: |
-      cmake -LAH >options.txt 2>&1
-      cmake -DCMAKE_CXX_STANDARD=20 -DCMAKE_CXX_STANDARD_REQUIRED=ON -S . -B build -Wno-dev
+      sudo pacman --needed --noconfirm -Syu
+      cmake -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON -S . -B build -Wno-dev
       cmake --build build
 
 github:
