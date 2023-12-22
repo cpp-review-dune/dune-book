@@ -1,4 +1,4 @@
-Installation of DUNE Numerics [v2.8.0](https://dune-project.org/releases/2.8.0)
+Installation of DUNE Numerics [v2.9.1](https://dune-project.org/releases/2.9.1)
 =========================
 
 Is pretty straightforward on [GNU/Linux](https://www.gnu.org/gnu/linux-and-gnu.html) [(I use Arch btw)](https://wiki.archlinux.org/title/arch_is_the_best), [macOS](https://github.com/dune-copasi/homebrew-tap) or [FreeBSD](https://www.freebsd.org).
@@ -11,10 +11,10 @@ First, install some [AUR helper](https://wiki.archlinux.org/title/AUR_helpers) l
 Optionally you can add [`arch4edu`](https://wiki.archlinux.org/title/unofficial_user_repositories#arch4edu) repository.
 
 ```console
-$ yay -Syu dune-core gmsh qtcreator --needed --noconfirm
+$ yay -Syu dune-pdelab gmsh parmetis-git qtcreator --needed --noconfirm
 ```
 
-For Debian 12 or later
+For Debian 13 or later
 ---------------
 
 ```console
@@ -23,7 +23,7 @@ $ sudo apt upgrade
 $ sudo apt install libdune-{<insert name module here without dune prefix>}-dev
 ```
 
-For FreeBSD 13.0
+For FreeBSD 14.0
 --------------
 
 ```console

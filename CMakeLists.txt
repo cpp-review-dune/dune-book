@@ -1,18 +1,13 @@
-cmake_minimum_required(VERSION 3.13)
-project(dune-book LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.16)
+project("dune-book" LANGUAGES CXX)
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 
-if(NOT (dune-common_DIR OR dune-common_ROOT OR
-      "${CMAKE_PREFIX_PATH}" MATCHES ".*dune-common.*"))
-    string(REPLACE  ${PROJECT_NAME} dune-common dune-common_DIR
-      ${PROJECT_BINARY_DIR})
-endif()
-
-#find dune-common and set the module path
+# find dune-common
 find_package(dune-common REQUIRED)
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules"
-  ${dune-common_MODULE_PATH})
+
+# include dune-common modules in the current CMake path
+list(APPEND CMAKE_MODULE_PATH ${dune-common_MODULE_PATH})
 
 #include the dune macros
 include(DuneMacros)
@@ -21,11 +16,6 @@ include(DuneMacros)
 dune_project()
 
 dune_enable_all_packages()
-
-# https://github.com/dune-project/dune-common/blob/master/python/CMakeLists.txt#L18
-if(POLICY CMP0087)
-  cmake_policy(SET CMP0087 NEW)
-endif()
 
 add_subdirectory(examples)
 add_subdirectory(dune)

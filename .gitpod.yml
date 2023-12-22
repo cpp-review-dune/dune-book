@@ -1,11 +1,10 @@
-image: ghcr.io/cpp-review-dune/introductory-review/dunebook
+image: ghcr.io/cpp-review-dune/introductory-review/xeus-cling-dunebook
 
 tasks:
   - name: CMake tasks
     command: |
       sudo pacman --needed --noconfirm -Syu
-      cmake -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON -S . -B build -Wno-dev
-      cmake --build build
+      ./run.sh
 
 github:
   prebuilds:
